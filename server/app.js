@@ -6,6 +6,9 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/posts', require('./routes/posts'));
+app.use('/todos', require('./routes/todos'));
 
-
-app.listen(8000)
+const PORT = 8000;
+app.listen(PORT, () => {
+    console.log(`Connected to post: ${PORT}`);
+});
