@@ -3,6 +3,7 @@ import { AxiosResponse } from 'axios';
 
 const url : string = process.env.DB_URL ==null ? "" : process.env.DB_URL.replace(';','');
 console.log(url);
+console.log('yo');
 
 interface Todo {
         _id: string;
@@ -17,3 +18,6 @@ export const createTodo = (todo: Todo) : Promise<AxiosResponse> => axios.post(ur
 export const getTodos = () : Promise<AxiosResponse> => axios.get(url);
 export const updateTodo = (id: string, todo: Todo) : Promise<AxiosResponse> => axios.patch(`${url}/${id}`, todo);
 export const deleteTodo = (id: string) : Promise<AxiosResponse> => axios.delete(`${url}/${id}`);
+export const deleteCompleted = (list: string) : Promise<AxiosResponse> => axios.delete(`${url}/completed/${list}`);
+export const getList = (list: string) : Promise<AxiosResponse> => axios.get(`${url}/list/${list}`);
+export const getListNames = () : Promise<AxiosResponse> => axios.get(`${url}/listNames`);

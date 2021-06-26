@@ -29,7 +29,7 @@ const updateTodo = async(req, res) => {
     try{
         const todo = await Todo.findById({_id: req.params.id });
         selectedOption.forEach(option => todo[option] = req.body[option]);
-        await todo.save()
+        await todo.save();
         res.status(200).json(todo);
     } catch (error) {
         res.status(404).json({ success: false, error});
@@ -45,4 +45,31 @@ const deleteTodo = async(req, res) => {
     }
 }
 
-module.exports = { createTodo, getTodos, updateTodo, deleteTodo }
+const deleteCompleted = async(req, res) => {
+    try {
+        const todos = await Todo.deleteMany({ list: req.params.list, completed: true });
+        res.status(200).json("Completed todos were deleted");
+    } catch (error) {
+        res.status(404).json({ success: false, error });
+    }
+}
+
+const getList = async(req, res) => {
+    try {
+        const todos = await Todo.find({ list: req.params.list });
+        res.status(200).json(todos);
+    } catch (error) {
+        res.status(400).json({success: false, error});
+    }
+}
+
+const getListNames = async(req, res) => {
+    try {
+        const names = await Todo.distinct('list');
+        res.status(200).json(names);
+    } catch(error) {
+        res.status(400).json({success: false, error});
+    }
+}
+
+module.exports = { createTodo, getTodos, updateTodo, deleteTodo, deleteCompleted, getList, getListNames }

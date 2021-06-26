@@ -1,36 +1,20 @@
 import React, { useState , useEffect } from 'react';
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Text, View, StyleSheet } from 'react-native';
 import * as api from '../api/index';
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { AxiosResponse } from 'axios';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import Colors from '../constants/Colors';
 import { MonoText } from './StyledText';
+import { withSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function TodoList() {
-    console.log('hello');
+export default function TodoList({ listName }: { listName: string }) {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState<any[]>([]);
 
-
-    /**useEffect(() => {
-        console.log('use effect');
-        const result = async () => {
-            try {
-                console.log('trying');
-                const response = await api.getTodos();
-                setData(response.data);
-                console.log(response.data);
-            } catch(error) {
-                console.log(error);
-            }
-        };
-        result();
-    });**/
-
     useEffect(() => {
-        api.getTodos()
-            //.then((response) => console.log(response.data[0]._id))
+        api.getList(listName)
             .then((response) => setData(response.data))
             .catch((error) => console.error(error))
             .finally(() => setLoading(false));
@@ -38,15 +22,35 @@ export default function TodoList() {
 
     return (
         <View>
-                {isLoading ? <ActivityIndicator/> : (
-                    <FlatList
-                        data={data}
-                        keyExtractor={({ _id }, index) => _id}
-                        renderItem={({ item }) => (
-                            <Text style={{color: "white"}}>{item.description}</Text>
-                        )}
-                    />
-                )}
+            <button onClick={() => clearCompleted(listName)}>Clear completed</button>
+            {isLoading ? <ActivityIndicator/> : (
+                <FlatList
+                    data={data}
+                    keyExtractor={({ _id }, index) => _id}
+                    renderItem={({ item }) => (
+                        <BouncyCheckbox style={styles.checkbox} text={item.description} isChecked={item.completed} onPress={(isChecked?: boolean) => {}}/>
+                    )}
+                />
+            )}
         </View>
   );
+}
+
+const styles = StyleSheet.create({
+    item: {
+        color: 'white',
+        fontSize: 15
+    },
+    checkbox: {
+        marginBottom: '10%',
+    }
+});
+
+function clearCompleted(listName: string) {
+    api.deleteCompleted(listName);
+    console.log("completed cleared")
+}
+
+function handleCheckboxPress() {
+
 }
