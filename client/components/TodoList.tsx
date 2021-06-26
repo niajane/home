@@ -28,7 +28,7 @@ export default function TodoList({ listName }: { listName: string }) {
                     data={data}
                     keyExtractor={({ _id }, index) => _id}
                     renderItem={({ item }) => (
-                        <BouncyCheckbox style={styles.checkbox} text={item.description} isChecked={item.completed} onPress={(isChecked?: boolean) => {}}/>
+                        <BouncyCheckbox style={styles.checkbox} text={item.description} isChecked={item.completed} onPress={(isChecked?: boolean) => {handleCheckboxPress(item._id, isChecked)}}/>
                     )}
                 />
             )}
@@ -51,6 +51,9 @@ function clearCompleted(listName: string) {
     console.log("completed cleared")
 }
 
-function handleCheckboxPress() {
-
+function handleCheckboxPress(id: string, checked?: boolean) {
+    if (checked == undefined){
+        checked = false;
+    }    
+    api.toggleTodo(id, checked);
 }

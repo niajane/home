@@ -30,9 +30,9 @@ export default function TabOneScreen() {
   if (currentList) {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Grocery</Text>
+        <Text style={styles.title}>{currentList}</Text>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-        <TodoList listName="Grocery"/>
+        <TodoList listName={currentList}/>
       </View>
     );
   }

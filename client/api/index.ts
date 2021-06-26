@@ -21,3 +21,4 @@ export const deleteTodo = (id: string) : Promise<AxiosResponse> => axios.delete(
 export const deleteCompleted = (list: string) : Promise<AxiosResponse> => axios.delete(`${url}/completed/${list}`);
 export const getList = (list: string) : Promise<AxiosResponse> => axios.get(`${url}/list/${list}`);
 export const getListNames = () : Promise<AxiosResponse> => axios.get(`${url}/listNames`);
+export const toggleTodo = (id: string, checked: boolean) : Promise<AxiosResponse> => axios.patch(`${url}/${id}`, { completed: checked});
