@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
-import ListsOverview from '../components/ListsOverview';
+import TodoList from '../components/TodoList';
 import { TabOneParamList } from '../types';
 import { RouteProp } from '@react-navigation/core';
 
@@ -11,15 +11,11 @@ type Props = {
   navigation: ListsNavigationProp;
 }
 
-export default function TabOneScreen({ route, navigation }: Props) {
+export default function ListViewScreen({ route, navigation }: Props) {
   
-  const goToList = (listName: string) => (
-    navigation.navigate('ListViewScreen', {list: listName})
-  );
+    const { list } = route.params;
 
-  return (
-      <ListsOverview goToList={goToList}/>
-  );
+    return (
+        <TodoList listName={list}/>
+    );
 }
-
-

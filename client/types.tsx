@@ -15,6 +15,7 @@ export type BottomTabParamList = {
 
 export type TabOneParamList = {
   TabOneScreen: undefined;
+  ListViewScreen: {list : string};
 };
 
 export type TabTwoParamList = {
