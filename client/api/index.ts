@@ -14,7 +14,11 @@ interface Todo {
 
 axios.defaults.baseURL = ``;
 console.log(url.replace(';',''));
-export const createTodo = (todo: Todo) : Promise<AxiosResponse> => axios.post(url, todo);
+export const createTodoFromStrings = (_id: string, description: string, list:string, completed:boolean) => {
+        let newTodo = {description: description, list: list, completed: completed};
+        axios.post(url, newTodo);
+}
+export const createTodo = (todo: Object) : Promise<AxiosResponse> => axios.post(url, todo);
 export const getTodos = () : Promise<AxiosResponse> => axios.get(url);
 export const updateTodo = (id: string, todo: Todo) : Promise<AxiosResponse> => axios.patch(`${url}/${id}`, todo);
 export const deleteTodo = (id: string) : Promise<AxiosResponse> => axios.delete(`${url}/${id}`);

@@ -17,12 +17,9 @@ export default function TodoList({ listName }: { listName: string }) {
     const [data, setData] = useState<any[]>([]);
 
     function clearCompleted(listName: string) {
-        //oh shit
         api.deleteCompleted(listName)
             .then((response) => console.log(response.data))
-        console.log(data);
         setData(data.filter(item => item.completed == false))
-        console.log(data);
     }
 
     useEffect(() => {
