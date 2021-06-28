@@ -30,32 +30,30 @@ export default function ListsOverview({ goToList }: { goToList: any }) {
                   data={data}
                   keyExtractor={(index) => index}
                   renderItem={(item) => (
-                    <Text onPress={() => goToList(item.item)}>{item.item}</Text>
+                    <Text style={styles.text} onPress={() => goToList(item.item)}>{item.item}</Text>
                   )}
               />
           )}
-          <Input handler={addNewList}/>
+            <Text style={styles.text}>Hello</Text>
+            <Input style={styles.input} handler={addNewList}/>
       </View>
 );
 }
 
 const styles = StyleSheet.create({
   container: {
+    marginLeft: '10%',
     //flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+    //alignItems: 'center',
+    //justifyContent: 'center',
   },
   input: {
     color: 'white',
+    fontSize: 20,
+  },
+  text: {
+      fontSize: 20,
+      padding: '3px'
   }
 });
 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, NativeSyntheticEvent, TextInputChangeEventData, TextInput } from 'react-native';
+import { StyleSheet, NativeSyntheticEvent, TextInputChangeEventData, TextInput, StyleProp, TextStyle } from 'react-native';
 
 
-export default function Input({ handler }: { handler: any }) {
+export default function Input({ handler, style }: { handler: any, style:StyleProp<TextStyle> }) {
     const [addNewInput, setAddNewInput] = useState('');
 
     const addNew = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
@@ -18,7 +18,7 @@ export default function Input({ handler }: { handler: any }) {
     return (
         <TextInput
             value={addNewInput}
-            style={styles.input}
+            style={style}
             onChange={addNew}
             onSubmitEditing={submitNew}
             placeholder="add new"
@@ -26,10 +26,3 @@ export default function Input({ handler }: { handler: any }) {
   );
 }
 
-const styles = StyleSheet.create({
-    input: {
-        fontSize: 16,
-        color: 'white',
-        marginLeft: '10px',
-    },
-});

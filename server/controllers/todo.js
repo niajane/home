@@ -54,6 +54,15 @@ const deleteCompleted = async(req, res) => {
     }
 }
 
+const deleteList = async(req, res) => {
+    try {
+        const todos = await Todo.deleteMany({ list: req.params.list });
+        res.status(200).json("List deleted");
+    } catch (error) {
+        res.status(404).json({ success: false, error });
+    }
+}
+
 const getList = async(req, res) => {
     try {
         const todos = await Todo.find({ list: req.params.list });
@@ -72,4 +81,4 @@ const getListNames = async(req, res) => {
     }
 }
 
-module.exports = { createTodo, getTodos, updateTodo, deleteTodo, deleteCompleted, getList, getListNames }
+module.exports = { createTodo, getTodos, updateTodo, deleteTodo, deleteCompleted, getList, getListNames, deleteList }

@@ -9,10 +9,16 @@ export default function TodoList({ listName }: { listName: string }) {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState<any[]>([]);
 
-    function clearCompleted(listName: string) {
+    function clearCompleted() {
         api.deleteCompleted(listName)
             .then((response) => console.log(response.data))
         setData(data.filter(item => item.completed == false))
+    }
+
+    const deleteList = () => {
+        api.deleteList(listName)
+            .then((response) => console.log(response.data))
+        //navigate back to list view, refresh
     }
 
     const submitNew = (input:string) => {
@@ -33,7 +39,8 @@ export default function TodoList({ listName }: { listName: string }) {
         <View style={styles.container}>
             <Text style={styles.title}>{listName}</Text>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-            <button onClick={() => clearCompleted(listName)}>Clear completed</button>
+            <button onClick={() => deleteList()}>Delete list</button>
+            <button onClick={() => clearCompleted()}>Clear completed</button>
             {isLoading ? <ActivityIndicator/> : (
                 <FlatList
                     data={data.filter(item => item.hasOwnProperty("description"))}
@@ -43,7 +50,7 @@ export default function TodoList({ listName }: { listName: string }) {
                     )}
                 />
             )}
-            <Input handler={submitNew}/>
+            <Input style={styles.input} handler={submitNew}/>
         </View>
   );
 }
