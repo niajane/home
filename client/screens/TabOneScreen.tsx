@@ -3,6 +3,7 @@ import * as api from '../api/index';
 import { ActivityIndicator, FlatList, NativeSyntheticEvent, StyleSheet, TextInput, TextInputChangeEventData } from 'react-native';
 
 import TodoList from '../components/TodoList';
+import Input from '../components/Input';
 import { Text, View } from '../components/Themed';
 
 export default function TabOneScreen() {
@@ -10,6 +11,12 @@ export default function TabOneScreen() {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
   const [currentList, setCurrentList] = useState('');
+
+  const addNewList = (input:string) => {
+    let newTodo = {list: input};
+    api.createTodo(newTodo)
+    setData([...data, input])
+  }
 
   useEffect(() => {
       api.getListNames()
@@ -34,13 +41,14 @@ export default function TabOneScreen() {
                   )}
               />
           )}
+          <Input handler={addNewList}/>
       </View>
 );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -53,5 +61,8 @@ const styles = StyleSheet.create({
     height: 1,
     width: '80%',
   },
+  input: {
+    color: 'white',
+  }
 });
 

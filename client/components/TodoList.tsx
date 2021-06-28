@@ -1,23 +1,13 @@
 import React, { useState , useEffect } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, NativeSyntheticEvent, TextInputChangeEventData, TextInput, TextInputSubmitEditingEventData } from 'react-native';
 import * as api from '../api/index';
+import Input from './Input';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { AxiosResponse } from 'axios';
-import { TouchableOpacity } from 'react-native';
 import { Text, View } from './Themed';
-
-
-import Colors from '../constants/Colors';
-import { MonoText } from './StyledText';
-import { withSafeAreaInsets } from 'react-native-safe-area-context';
-import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
-
-//get list to remain even if empty
 
 export default function TodoList({ listName }: { listName: string }) {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState<any[]>([]);
-    const [addNewInput, setAddNewInput] = useState('');
 
     function clearCompleted(listName: string) {
         api.deleteCompleted(listName)
@@ -25,15 +15,9 @@ export default function TodoList({ listName }: { listName: string }) {
         setData(data.filter(item => item.completed == false))
     }
 
-    const addNew = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
-        setAddNewInput(event.nativeEvent.text);
-    };
-
-    const submitNew = () => {
-        let newTodo = {description: addNewInput, list: listName, completed: false};
-        setAddNewInput('');
+    const submitNew = (input:string) => {
+        let newTodo = {description: input, list: listName, completed: false};
         api.createTodo(newTodo)
-            //.then((response) => console.log(response.data))
             .then((response) => setData([...data, response.data]))
             .catch((error) => console.error(error))
     };
@@ -52,20 +36,14 @@ export default function TodoList({ listName }: { listName: string }) {
             <button onClick={() => clearCompleted(listName)}>Clear completed</button>
             {isLoading ? <ActivityIndicator/> : (
                 <FlatList
-                    data={data}
+                    data={data.filter(item => item.hasOwnProperty("description"))}
                     keyExtractor={({ _id }, index) => _id}
                     renderItem={({ item }) => (
                         <BouncyCheckbox style={styles.checkbox} text={item.description} isChecked={item.completed} onPress={(isChecked?: boolean) => {item.completed = isChecked; handleCheckboxPress(item._id, isChecked)}}/>
                     )}
                 />
             )}
-            <TextInput
-                value={addNewInput}
-                style={styles.input}
-                onChange={addNew}
-                onSubmitEditing={submitNew}
-                placeholder="add new"
-            />
+            <Input handler={submitNew}/>
         </View>
   );
 }
@@ -77,9 +55,15 @@ const styles = StyleSheet.create({
     },
     checkbox: {
         marginBottom: '10%',
+        padding: '3px',
+    },
+    listText: {
+        
     },
     input: {
+        fontSize: 16,
         color: 'white',
+        marginLeft: '10px',
     },
     container: {
         //flex: 1,
