@@ -10,47 +10,17 @@ export default function TabOneScreen() {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
   const [currentList, setCurrentList] = useState('');
-  const [addNewInput, setAddNewInput] = useState('');
-
-  const addNew = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
-    setAddNewInput(event.nativeEvent.text)
-  };
-  const submitNew = () => {
-    let data = {description: addNewInput, list: currentList, completed: false};
-    setAddNewInput('');
-    api.createTodo(data);
-  }
 
   useEffect(() => {
-    if (!currentList) {
       api.getListNames()
         .then((response) => setData(response.data))
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
-    }
-    else {
-      api.getList(currentList)
-        .then((response) => setData(response.data))
-        .catch((error) => console.error(error))
-        .finally(() => setLoading(false));
-    }
-     
   }, []);
 
   if (currentList) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>{currentList}</Text>
-        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-        <TodoList listName={currentList}/>
-        <TextInput
-          value={addNewInput}
-          style={styles.input}
-          onChange={addNew}
-          onSubmitEditing={submitNew}
-          placeholder="add new"
-        />
-      </View>
+      <TodoList listName={currentList}/>
     );
   }
   return (
@@ -77,9 +47,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-  },
-  input: {
-    color: 'white',
   },
   separator: {
     marginVertical: 30,
