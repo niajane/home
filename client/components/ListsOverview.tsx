@@ -34,8 +34,7 @@ export default function ListsOverview({ goToList }: { goToList: any }) {
                   )}
               />
           )}
-            <Text style={styles.text}>Hello</Text>
-            <Input style={styles.input} handler={addNewList}/>
+          <Input style={styles.input} handler={addNewList}/>
       </View>
 );
 }
