@@ -6,6 +6,7 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Text, View } from './Themed';
 import { Ionicons } from '@expo/vector-icons';
 import EditList from './EditList';
+import Editable from './Editable';
 
 export default function TodoList({ listName }: { listName: string }) {
     const [isLoading, setLoading] = useState(true);
@@ -33,7 +34,15 @@ export default function TodoList({ listName }: { listName: string }) {
             .catch((error) => console.error(error))
     };
 
-    const renameList = () => {}
+    const editListTitle = (input:string) => {
+
+    }
+
+    const renameList = (input:string) => {
+        api.renameList(listName, input)
+            .then((response) => console.log(response))
+            .catch((error) => console.error(error))
+    }
 
     const closeMenuIfOpen = () => {
         setMenuOpen(false)
@@ -49,7 +58,7 @@ export default function TodoList({ listName }: { listName: string }) {
     return (
         <Pressable style={styles.container} onPress={closeMenuIfOpen}>
             <View style={styles.header}>
-                <Text style={styles.title}>{listName}</Text>
+                <Editable style={styles.title} text={listName} handler={renameList} />
                 <EditList listName={listName} open={menuOpen} setOpen={setMenuOpen} clearCompleted={clearCompleted} renameList={renameList} deleteList={deleteList}/>
             </View>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
@@ -103,6 +112,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
+        color: 'white'
     },
     separator: {
         marginVertical: 30,

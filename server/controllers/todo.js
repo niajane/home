@@ -24,7 +24,7 @@ const updateTodo = async(req, res) => {
     const selectedOption = Object.keys(req.body);
     const exists = selectedOption.every(option => allowedOptions.includes(option));
     if(!exists) {
-        return res.status(404).json({ success: false, error});
+        return res.status(404).json({ success: false, error: "option doesn't exist, update failed"});
     }
     try{
         const todo = await Todo.findById({_id: req.params.id });
@@ -81,4 +81,16 @@ const getListNames = async(req, res) => {
     }
 }
 
-module.exports = { createTodo, getTodos, updateTodo, deleteTodo, deleteCompleted, getList, getListNames, deleteList }
+const renameList = async(req, res) => {
+    try {
+        if(req.body['newName']==null) {
+            throw new Error('No name provided');
+        }
+        const items = await Todo.updateMany({ list: req.params.list}, {list: req.body['newName']});
+        res.status(200).json(items);
+    } catch(error) {
+        res.status(400).json({success: false, error});
+    }
+}
+
+module.exports = { renameList, createTodo, getTodos, updateTodo, deleteTodo, deleteCompleted, getList, getListNames, deleteList }

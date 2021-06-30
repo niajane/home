@@ -2,8 +2,6 @@ import axios from 'axios';
 import { AxiosResponse } from 'axios';
 
 const url : string = process.env.DB_URL ==null ? "" : process.env.DB_URL.replace(';','');
-console.log(url);
-console.log('yo');
 
 interface Todo {
         _id: string;
@@ -27,3 +25,4 @@ export const getList = (list: string) : Promise<AxiosResponse> => axios.get(`${u
 export const getListNames = () : Promise<AxiosResponse> => axios.get(`${url}/listNames`);
 export const toggleTodo = (id: string, checked: boolean) : Promise<AxiosResponse> => axios.patch(`${url}/${id}`, { completed: checked});
 export const deleteList = (list: string) : Promise<AxiosResponse> => axios.delete(`${url}/list/${list}`);
+export const renameList = (list: string, newName: string) : Promise<AxiosResponse> => axios.patch(`${url}/renameList/${list}`, {newName: newName});

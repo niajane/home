@@ -41,7 +41,7 @@ export default function ListsView() {
                   )}
               />
           )}
-          <Input handler={addNewList}/>
+          <Input handler={addNewList} style={styles.input}/>
       </View>
 );
 }
