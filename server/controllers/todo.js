@@ -84,7 +84,7 @@ const getListNames = async(req, res) => {
 const renameList = async(req, res) => {
     try {
         if(req.body['newName']==null) {
-            throw new Error('No name provided');
+            return res.status(404).json({ success: false, error: "no name provided"});
         }
         const items = await Todo.updateMany({ list: req.params.list}, {list: req.body['newName']});
         res.status(200).json(items);

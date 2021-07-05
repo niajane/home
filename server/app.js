@@ -7,6 +7,7 @@ app.use(cors());
 
 app.use('/posts', require('./routes/posts'));
 app.use('/todos', require('./routes/todos'));
+app.use('/lists', require('./routes/lists'));
 
 const PORT = 8000;
 app.listen(PORT, () => {
