@@ -1,5 +1,5 @@
 import React, { useState , useEffect } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, NativeSyntheticEvent, TextInputChangeEventData, TextInput, TextInputSubmitEditingEventData, ScrollView, GestureResponderEvent, TouchableOpacity, Pressable } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, NativeSyntheticEvent, TextInputChangeEventData, TextInput, TextInputSubmitEditingEventData, ScrollView, GestureResponderEvent, TouchableOpacity, Pressable, TextStyle } from 'react-native';
 import * as api from '../api/index';
 import Input from './Input';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -7,11 +7,12 @@ import { Text, View } from './Themed';
 import { Ionicons } from '@expo/vector-icons';
 import EditList from './EditList';
 import Editable from './Editable';
-import { List } from '../api/index';
+import { List, Todo } from '../api/index';
+import TodoItem from './TodoItem';
 
 export default function TodoList({ list, setListName }: { list: List, setListName: any }) {
     const [isLoading, setLoading] = useState(false);
-    const [data, setData] = useState<any[]>(list.items);
+    const [data, setData] = useState<Todo[]>(list.items);
     const [menuOpen, setMenuOpen] = useState(false);
     const [listInfo, setListInfo] = useState<List>(list);
 
@@ -45,6 +46,10 @@ export default function TodoList({ list, setListName }: { list: List, setListNam
             .then((response) => console.log(response))
             .catch((error) => console.error(error));
         setListName(input);
+    }
+
+    const renameItem = (input:string, id:string) => {
+        api.updateTodo(listInfo._id, id, {description: input})
     }
 
     const changeColour = (input:string) => {
@@ -87,11 +92,11 @@ export default function TodoList({ list, setListName }: { list: List, setListNam
                             extraData={listInfo.colour}
                             keyExtractor={({ _id }, index) => _id}
                             renderItem={({ item }) => (
-                                <BouncyCheckbox style={styles.checkbox} fillColor={listInfo.colour} iconStyle={{ borderColor: listInfo.colour }} text={item.description} isChecked={item.completed} onPress={(isChecked?: boolean) => {item.completed = isChecked; handleCheckboxPress(list._id, item, isChecked)}}/>
-                            )}
+                                <TodoItem item={item} colour={listInfo.colour} handleCheck={handleCheckboxPress} handleEdit={renameItem}></TodoItem>
+                                )}
                         />
                     )}
-                    <Input style={styles.input} handler={submitNew}/>
+                    <Input style={[styles.input,styles.todoItem]} handler={submitNew}/>
             </ScrollView>
         </Pressable>
   );
@@ -110,7 +115,6 @@ const styles = StyleSheet.create({
         fontSize: 15
     },
     checkbox: {
-        marginBottom: '10%',
         padding: '3px',
     },
     listText: {
@@ -146,8 +150,22 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         right: '10px',
     },
+    todoItem: {
+        display:'flex',
+        flexDirection:'row',
+        alignItems:'center',
+        paddingTop: '10px',
+    },
 });
 
+export const checkboxText = (checked: boolean): TextStyle => {
+    return {
+      fontSize: 16,
+      color: "#757575",
+      textDecorationLine: checked ? "line-through" : "none",
+      paddingLeft: '5px',
+    };
+  };
 
 
 function handleCheckboxPress(list_id: string, todo: api.Todo, checked?: boolean) {
@@ -157,3 +175,10 @@ function handleCheckboxPress(list_id: string, todo: api.Todo, checked?: boolean)
     todo.completed = checked; 
     api.updateTodo(list_id, todo._id, {completed: checked});   
 }
+
+
+/*
+<View style={styles.todoItem}>
+                                    <BouncyCheckbox style={styles.checkbox} fillColor={listInfo.colour} iconStyle={{ borderColor: listInfo.colour }} disableText={true} isChecked={item.completed} onPress={(isChecked?: boolean) => {item.completed = isChecked; handleCheckboxPress(list._id, item, isChecked)}}/>
+                                    <Editable style={checkboxText(item.completed)} text={item.description} handler={renameList}/>
+                                </View>*/
