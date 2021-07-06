@@ -26,7 +26,6 @@ export default function TodoList({ list, setListName }: { list: List, setListNam
     const deleteList = () => {
         api.deleteList(list._id)
             .then((response) => console.log(response.data))
-        //navigate back to list view, refresh
         setMenuOpen(false)
     }
 
@@ -48,8 +47,18 @@ export default function TodoList({ list, setListName }: { list: List, setListNam
         setListName(input);
     }
 
+    const updateItem = (todo: Todo) => {
+        let index:number = data.findIndex((item)=> item._id == todo._id);
+        setData([
+            ...data.slice(0,index),
+            todo,
+            ...data.slice(index+1)
+        ])
+    }
+
     const renameItem = (input:string, id:string) => {
         api.updateTodo(listInfo._id, id, {description: input})
+            .then((response) => updateItem(response.data))
     }
 
     const changeColour = (input:string) => {
@@ -74,13 +83,11 @@ export default function TodoList({ list, setListName }: { list: List, setListNam
             .finally(() => setLoading(false));*/
     }, []);
 
-    //style={{background: "rgb("+box.color+")"}}
-
     return (
         <Pressable style={styles.container} onPress={closeMenuIfOpen}>
             <View style={styles.header}>
                 <Editable style={[styles.title, {color: listInfo.colour}]} text={listInfo.title} handler={renameList} />
-                <EditList listName={list._id} open={menuOpen} setOpen={setMenuOpen} clearCompleted={clearCompleted} changeColour={changeColour} deleteList={deleteList}/>
+                <EditList listName={list._id} colour={listInfo.colour} open={menuOpen} setOpen={setMenuOpen} clearCompleted={clearCompleted} changeColour={changeColour} deleteList={deleteList}/>
             </View>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
             <ScrollView
@@ -96,7 +103,10 @@ export default function TodoList({ list, setListName }: { list: List, setListNam
                                 )}
                         />
                     )}
-                    <Input style={[styles.input,styles.todoItem]} handler={submitNew}/>
+                    <View style={styles.todoItem}>
+                        <Ionicons name='add-outline' size={25} color={listInfo.colour} style={{padding:'3px'}}/>
+                        <Input style={styles.input} handler={submitNew}/>
+                    </View>
             </ScrollView>
         </Pressable>
   );
@@ -122,8 +132,7 @@ const styles = StyleSheet.create({
     },
     input: {
         fontSize: 16,
-        color: 'white',
-        marginLeft: '10px',
+        color: "#757575",
     },
     container: {
         flex: 1,
@@ -168,17 +177,10 @@ export const checkboxText = (checked: boolean): TextStyle => {
   };
 
 
-function handleCheckboxPress(list_id: string, todo: api.Todo, checked?: boolean) {
+function handleCheckboxPress(list_id: string, todo: Todo, checked?: boolean) {
     if (checked == undefined){
         checked = false;
     }
     todo.completed = checked; 
     api.updateTodo(list_id, todo._id, {completed: checked});   
 }
-
-
-/*
-<View style={styles.todoItem}>
-                                    <BouncyCheckbox style={styles.checkbox} fillColor={listInfo.colour} iconStyle={{ borderColor: listInfo.colour }} disableText={true} isChecked={item.completed} onPress={(isChecked?: boolean) => {item.completed = isChecked; handleCheckboxPress(list._id, item, isChecked)}}/>
-                                    <Editable style={checkboxText(item.completed)} text={item.description} handler={renameList}/>
-                                </View>*/

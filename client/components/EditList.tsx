@@ -7,7 +7,7 @@ import { Text, View } from './Themed';
 import { Ionicons } from '@expo/vector-icons';
 import { CirclePicker, ColorResult } from 'react-color';
 
-export default function EditList({ listName, open, setOpen, clearCompleted, deleteList, changeColour }: { listName: string, open: boolean, setOpen: any, clearCompleted: any, deleteList:any, changeColour:any }) {
+export default function EditList({ listName, colour, open, setOpen, clearCompleted, deleteList, changeColour }: { listName: string, colour:string, open: boolean, setOpen: any, clearCompleted: any, deleteList:any, changeColour:any }) {
 
     const handleChangeComplete = (color: ColorResult, event: React.ChangeEvent<HTMLInputElement>) => {
         changeColour(color.hex);
@@ -15,7 +15,7 @@ export default function EditList({ listName, open, setOpen, clearCompleted, dele
 
     return (
         <View>
-            <Ionicons name='ellipsis-horizontal-circle-outline' size={23} color='white' onPress={()=>setOpen(true)}/>
+            <Ionicons name='ellipsis-horizontal-circle-outline' size={23} color={colour} onPress={()=>setOpen(true)}/>
             {open &&
              <View style={styles.container}>
                 <Text onPress={() => clearCompleted()}>Clear completed</Text>

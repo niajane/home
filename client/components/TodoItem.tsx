@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 export const checkboxText = (checked: boolean): TextStyle => {
     return {
       fontSize: 16,
-      color: "#757575",
+      color: "white",
       textDecorationLine: checked ? "line-through" : "none",
       paddingLeft: '5px',
     };
