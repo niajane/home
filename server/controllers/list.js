@@ -19,6 +19,16 @@ const getLists = async(req, res) => {
     }
 }
 
+const getListsOverview = async(req, res) => {
+    try {
+        //const list = await List.find();
+        const lists = await List.find({}, 'title colour');
+        res.status(200).json(lists);
+    } catch (error) {
+        res.status(400).json({success: false, error});
+    }
+}
+
 const getList = async(req, res) => {
     try {
             const list = await List.find({ _id: req.params.id });
@@ -113,4 +123,4 @@ const createTodo = async(req,res) => {
     }
 }
 
-module.exports = { createList, getList, getLists, updateList, deleteList, deleteCompleted, deleteTodo, updateTodo, createTodo }
+module.exports = { getListsOverview, createList, getList, getLists, updateList, deleteList, deleteCompleted, deleteTodo, updateTodo, createTodo }

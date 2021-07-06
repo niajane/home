@@ -7,41 +7,55 @@ import { Text, View } from './Themed';
 import { Ionicons } from '@expo/vector-icons';
 import EditList from './EditList';
 import Editable from './Editable';
+import { List } from '../api/index';
 
-export default function TodoList({ listName }: { listName: string }) {
-    const [isLoading, setLoading] = useState(true);
-    const [data, setData] = useState<any[]>([]);
+export default function TodoList({ list, setListName }: { list: List, setListName: any }) {
+    const [isLoading, setLoading] = useState(false);
+    const [data, setData] = useState<any[]>(list.items);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [listInfo, setListInfo] = useState<List>(list);
 
     function clearCompleted() {
-        api.deleteCompleted(listName)
+        api.deleteCompleted(list._id)
             .then((response) => console.log(response.data))
         setData(data.filter(item => item.completed == false))
         setMenuOpen(false)
     }
 
     const deleteList = () => {
-        api.deleteList(listName)
+        api.deleteList(list._id)
             .then((response) => console.log(response.data))
         //navigate back to list view, refresh
         setMenuOpen(false)
     }
 
     const submitNew = (input:string) => {
-        let newTodo = {description: input, list: listName, completed: false};
-        api.createTodo(newTodo)
+        let newTodo = {description: input, completed: false};
+        api.createTodo(list._id, newTodo)
             .then((response) => setData([...data, response.data]))
             .catch((error) => console.error(error))
     };
 
-    const editListTitle = (input:string) => {
-
+    const renameList = (input:string) => {
+        setListInfo(prevState => ({
+            ...prevState,
+            title: input
+        }))
+        api.updateList(list._id, {title: input})
+            .then((response) => console.log(response))
+            .catch((error) => console.error(error));
+        setListName(input);
     }
 
-    const renameList = (input:string) => {
-        api.renameList(listName, input)
+    const changeColour = (input:string) => {
+        list.colour = input;
+        setListInfo(prevState => ({
+                ...prevState,
+                colour: input
+            }))
+        api.updateList(list._id, {colour: input})
             .then((response) => console.log(response))
-            .catch((error) => console.error(error))
+            .catch((error) => console.error(error));
     }
 
     const closeMenuIfOpen = () => {
@@ -49,17 +63,19 @@ export default function TodoList({ listName }: { listName: string }) {
     }
 
     useEffect(() => {
-        api.getList(listName)
+        /*api.getList(list._id)
             .then((response) => setData(response.data))
             .catch((error) => console.error(error))
-            .finally(() => setLoading(false));
+            .finally(() => setLoading(false));*/
     }, []);
+
+    //style={{background: "rgb("+box.color+")"}}
 
     return (
         <Pressable style={styles.container} onPress={closeMenuIfOpen}>
             <View style={styles.header}>
-                <Editable style={styles.title} text={listName} handler={renameList} />
-                <EditList listName={listName} open={menuOpen} setOpen={setMenuOpen} clearCompleted={clearCompleted} renameList={renameList} deleteList={deleteList}/>
+                <Editable style={[styles.title, {color: listInfo.colour}]} text={listInfo.title} handler={renameList} />
+                <EditList listName={list._id} open={menuOpen} setOpen={setMenuOpen} clearCompleted={clearCompleted} changeColour={changeColour} deleteList={deleteList}/>
             </View>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
             <ScrollView
@@ -67,10 +83,11 @@ export default function TodoList({ listName }: { listName: string }) {
                 >
                     {isLoading ? <ActivityIndicator/> : (
                         <FlatList
-                            data={data.filter(item => item.hasOwnProperty("description"))}
+                            data={data}
+                            extraData={listInfo.colour}
                             keyExtractor={({ _id }, index) => _id}
                             renderItem={({ item }) => (
-                                <BouncyCheckbox style={styles.checkbox} text={item.description} isChecked={item.completed} onPress={(isChecked?: boolean) => {item.completed = isChecked; handleCheckboxPress(item._id, isChecked)}}/>
+                                <BouncyCheckbox style={styles.checkbox} fillColor={listInfo.colour} iconStyle={{ borderColor: listInfo.colour }} text={item.description} isChecked={item.completed} onPress={(isChecked?: boolean) => {item.completed = isChecked; handleCheckboxPress(list._id, item, isChecked)}}/>
                             )}
                         />
                     )}
@@ -133,9 +150,10 @@ const styles = StyleSheet.create({
 
 
 
-function handleCheckboxPress(id: string, checked?: boolean) {
+function handleCheckboxPress(list_id: string, todo: api.Todo, checked?: boolean) {
     if (checked == undefined){
         checked = false;
-    }    
-    api.toggleTodo(id, checked);
+    }
+    todo.completed = checked; 
+    api.updateTodo(list_id, todo._id, {completed: checked});   
 }

@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { createList, getList, getLists, updateList, deleteList, deleteCompleted, deleteTodo, updateTodo, createTodo } = require('../controllers/list.js')
+const { getListsOverview, createList, getList, getLists, updateList, deleteList, deleteCompleted, deleteTodo, updateTodo, createTodo } = require('../controllers/list.js')
 
 router.get('/', getLists);
+router.get('/overview', getListsOverview);
 router.get('/:id', getList);
 router.post('/', createList);
 router.patch('/:id', updateList);

@@ -3,6 +3,8 @@
  * https://reactnavigation.org/docs/typescript/
  */
 
+import { List } from "./api";
+
 export type RootStackParamList = {
   Root: undefined;
   NotFound: undefined;
@@ -15,7 +17,7 @@ export type BottomTabParamList = {
 
 export type TabOneParamList = {
   TabOneScreen: undefined;
-  ListViewScreen: {list : string};
+  ListViewScreen: {list : List, setListName : any};
 };
 
 export type TabTwoParamList = {

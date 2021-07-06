@@ -13,9 +13,9 @@ type Props = {
 
 export default function ListViewScreen({ route, navigation }: Props) {
   
-    const { list } = route.params;
+    const { list, setListName } = route.params;
 
     return (
-        <TodoList listName={list}/>
+        <TodoList list={list} setListName={setListName}/>
     );
 }

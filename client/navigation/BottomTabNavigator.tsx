@@ -63,6 +63,7 @@ function TabOneNavigator() {
       <TabOneStack.Screen
         name="ListViewScreen"
         component={ListViewScreen}
+        options={{ headerTitle: '' }}
       />
     </TabOneStack.Navigator>
   );
