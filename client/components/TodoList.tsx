@@ -15,9 +15,13 @@ export default function TodoList({ list, setListName }: { list: List, setListNam
     const [data, setData] = useState<Todo[]>(list.items);
     const [menuOpen, setMenuOpen] = useState(false);
     const [listInfo, setListInfo] = useState<List>(list);
+    if(!listInfo.colour){
+        listInfo.colour='white';
+    }
 
     function clearCompleted() {
-        api.deleteCompleted(list._id)
+        console.log('clearCompleted');
+        api.deleteCompleted(listInfo._id)
             .then((response) => console.log(response.data))
         setData(data.filter(item => item.completed == false))
         setMenuOpen(false)
@@ -76,6 +80,15 @@ export default function TodoList({ list, setListName }: { list: List, setListNam
         setMenuOpen(false)
     }
 
+
+    const handleCheckboxPress = (todo: Todo, checked?: boolean) => {
+        if (checked == undefined){
+            checked = false;
+        }
+        todo.completed = checked; 
+        api.updateTodo(listInfo._id, todo._id, {completed: checked});   
+    }
+
     useEffect(() => {
         /*api.getList(list._id)
             .then((response) => setData(response.data))
@@ -119,6 +132,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         paddingTop: '1%',
+        zIndex: 1,
     },
     item: {
         color: 'white',
@@ -177,10 +191,3 @@ export const checkboxText = (checked: boolean): TextStyle => {
   };
 
 
-function handleCheckboxPress(list_id: string, todo: Todo, checked?: boolean) {
-    if (checked == undefined){
-        checked = false;
-    }
-    todo.completed = checked; 
-    api.updateTodo(list_id, todo._id, {completed: checked});   
-}

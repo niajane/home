@@ -10,14 +10,17 @@ export default function TodoItem({ colour, item, handleCheck, handleEdit }: { co
 
     const [isChecked, setChecked] = useState(item.completed);
 
-    const handleCheckboxPress = () => {}
+    const handleCheckboxPress = (checked: boolean) => {
+        handleCheck(item, checked);
+    }
+
     const renameItem = (input: string) => {
         handleEdit(input, item._id)
     }
 
     return (
         <View style={styles.todoItem}>
-            <BouncyCheckbox style={styles.checkbox} fillColor={colour} iconStyle={{ borderColor: colour }} disableText={true} isChecked={item.completed} onPress={(isChecked?: boolean) => {setChecked(Boolean(isChecked)); handleCheck}}/>
+            <BouncyCheckbox style={styles.checkbox} fillColor={colour} iconStyle={{ borderColor: colour }} disableText={true} isChecked={item.completed} onPress={(isChecked?: boolean) => {setChecked(Boolean(isChecked)); handleCheckboxPress(Boolean(isChecked))}}/>
             <Editable style={checkboxText(isChecked)} text={item.description} handler={renameItem}/>
         </View>
   );

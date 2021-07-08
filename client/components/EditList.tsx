@@ -1,5 +1,5 @@
 import React, { useState , useEffect } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, NativeSyntheticEvent, TextInputChangeEventData, TextInput, TextInputSubmitEditingEventData } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, NativeSyntheticEvent, TextInputChangeEventData, TextInput, TextInputSubmitEditingEventData, TextStyle, ViewStyle } from 'react-native';
 import * as api from '../api/index';
 import Input from './Input';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -15,12 +15,23 @@ export default function EditList({ listName, colour, open, setOpen, clearComplet
 
     return (
         <View>
-            <Ionicons name='ellipsis-horizontal-circle-outline' size={23} color={colour} onPress={()=>setOpen(true)}/>
+            {open ?
+                <Ionicons name='close-outline' size={23} color={colour} onPress={()=>setOpen(!open)}/>
+                :<Ionicons name='chevron-down-outline' size={23} color={colour} onPress={()=>setOpen(!open)}/>
+            }
             {open &&
-             <View style={styles.container}>
-                <Text onPress={() => clearCompleted()}>Clear completed</Text>
-                <Text onPress={() => deleteList()}>Delete list</Text>
-                <CirclePicker colors={["#f54b42","#4287f5","#9342f5","green", "#ffc484", "#00bcd4"]} onChangeComplete={handleChangeComplete}></CirclePicker>
+             <View style={container(colour)}>
+                <View style={styles.item}>
+                    <Ionicons name='file-tray-outline' size={20} color={colour} onPress={() => clearCompleted()}/>
+                    <Text style={styles.text} onPress={() => clearCompleted()}>Clear completed</Text>
+                </View>
+                <View style={styles.item}>
+                    <Ionicons name='trash-outline' size={20} color={colour} onPress={() => deleteList()}/>
+                    <Text style={styles.text} onPress={() => deleteList()}>Delete list</Text>
+                </View>
+                <View style={styles.colourPicker}>
+                    <CirclePicker colors={["#f54b42","#4287f5","#9342f5","green", "#ffc484", "#00bcd4"]} width='150px' onChangeComplete={handleChangeComplete}></CirclePicker>
+                </View>
             </View>
             }
            
@@ -29,11 +40,26 @@ export default function EditList({ listName, colour, open, setOpen, clearComplet
 }
 
 const styles = StyleSheet.create({
-    container: {
+    item: {
+        display:'flex',
+        flexDirection:'row',
+        alignItems:'center',
+    },
+    text: {
+        paddingLeft: '2px'
+    },
+    colourPicker: {
+        alignContent: 'center'
+    }
+});
+
+export const container = (colour: string): ViewStyle => {
+    return {
         position: 'absolute',
-        border: '2px solid blue',
+        borderColor: colour,
+        borderWidth: 1,
         padding: '3px', 
         borderRadius: 10,
-        right: '10px',
-    },
-});
+        top: '30px'
+    };
+  };
