@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
   input: {
     color: 'white',
     fontSize: 20,
+    width: '200px'
   },
   text: {
       fontSize: 20,

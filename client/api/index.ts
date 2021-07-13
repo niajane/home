@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { AxiosResponse } from 'axios';
 
-const url : string = process.env.DB_URL ==null ? "" : process.env.DB_URL.replace(';','').replace('todos','lists');
+const url : string = process.env.DB_URL1 ==null ? "" : process.env.DB_URL1.replace(';','');
 console.log(url);
 
 export interface Todo {

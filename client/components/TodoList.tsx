@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
     input: {
         fontSize: 16,
         color: "#757575",
+        width: '115px',
     },
     container: {
         flex: 1,
